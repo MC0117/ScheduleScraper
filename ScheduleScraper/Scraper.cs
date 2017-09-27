@@ -49,19 +49,54 @@ namespace ScheduleScraper
             List<ScheduleModel> Schedule = null;
             Uri ScheduleUri = new Uri(URL, relative);
             HtmlDocument doc = GetDocument(ScheduleUri);
-            //string xPathDate = "/div/table/tbody/tr[]/td[2]/div/div[1]/img",
-            //    xPathLocation = "/div/div[3]",
-            //    xPathModel = "/div/table/tbody/tr[]/td[5]/div/div/div[1]/span[2]/time";
-            //int xPathIndex = 1;
-
             if (doc != null)
             {
                 Schedule = new List<ScheduleModel>();
                 HtmlNodeCollection nodeList = doc.DocumentNode.SelectNodes("//*[@id='page-64']/div/div");
+                for (int i = 0; i < nodeList.Count; i += 3)
+                {
+                    HtmlNode launchDateNode = nodeList[i];
+                    string date = (launchDateNode.ChildNodes.Where(n => n.Name == "span").First().InnerText);
+                    string modelCargo = (launchDateNode.ChildNodes.Where(n => n.Name == "span").Last().InnerText);
+
+                    HtmlNode missionDataNode = nodeList[i + 1];
+                    string location = missionDataNode.ChildNodes[3].InnerText;
+
+                    HtmlNode missionDescriptionNode = nodeList[i + 2];
+                    string updateDescription = missionDescriptionNode.ChildNodes[0].InnerText;
+
+                    ScheduleModel launch = new ScheduleModel(modelCargo.Split('•').First(), modelCargo.Split('•').Last().Remove(0, 1), date, location, updateDescription.Split('[').First());
+                    Schedule.Add(launch);
+                }
             }
             return Schedule;
         }
-        /*
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
         public static string GetList(HtmlDocument doc, string xPath)
         {
             HtmlNodeCollection weatherNodes = doc.DocumentNode.SelectNodes(xPath);
@@ -73,6 +108,8 @@ namespace ScheduleScraper
                 
             }
         }
+
+                    string title = thisNode.Attributes["title"].Value;
+                    string link = thisNode.Attributes["href"].Value;
+                    string src = thisNode.ChildNodes.Where(n => n.Name == "img")?.First().Attributes["src"].Value;
         */
-    }
-}
