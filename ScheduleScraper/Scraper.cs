@@ -69,11 +69,14 @@ namespace ScheduleScraper
                     string updateDescription = missionDescriptionNode.ChildNodes[0].InnerText;
 
                     string imagePath = PictureScraper.CreateRealtivePath(modelCargo.Split('•').First());
-                    img.Add(PictureScraper.GetImage(imagePath)[i]);
+                    List<string> images = PictureScraper.GetImage(imagePath);
+                    if (images != null && images.Count > 0)
+                    {
+                        img.Add(images[0]);
+                        ScheduleModel launch = new ScheduleModel(modelCargo.Split('•').First(), modelCargo.Split('•').Last().Remove(0, 1), date, location, updateDescription.Split('[').First(), img[0]);
+                        Schedule.Add(launch);
+                    }
                     //img.add(PictureimagePath)
-
-                    ScheduleModel launch = new ScheduleModel(modelCargo.Split('•').First(), modelCargo.Split('•').Last().Remove(0, 1), date, location, updateDescription.Split('[').First(), img[i]);
-                    Schedule.Add(launch);
                 }
             }
             return Schedule;
