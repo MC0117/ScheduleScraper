@@ -15,7 +15,6 @@ namespace ScheduleScraper
     {
         static Uri URL = new Uri("https://spaceflightnow.com/");
         const string relative = "launch-schedule/";
-
         private static HtmlDocument GetDocument(Uri uri)
         {
             HtmlDocument output = null;
@@ -52,9 +51,13 @@ namespace ScheduleScraper
             if (doc != null)
             {
                 Schedule = new List<ScheduleModel>();
+
                 HtmlNodeCollection nodeList = doc.DocumentNode.SelectNodes("//*[@id='page-64']/div/div");
+                List<string> img = new List<string>();
+
                 for (int i = 0; i < nodeList.Count; i += 3)
                 {
+
                     HtmlNode launchDateNode = nodeList[i];
                     string date = (launchDateNode.ChildNodes.Where(n => n.Name == "span").First().InnerText);
                     string modelCargo = (launchDateNode.ChildNodes.Where(n => n.Name == "span").Last().InnerText);
@@ -65,7 +68,11 @@ namespace ScheduleScraper
                     HtmlNode missionDescriptionNode = nodeList[i + 2];
                     string updateDescription = missionDescriptionNode.ChildNodes[0].InnerText;
 
-                    ScheduleModel launch = new ScheduleModel(modelCargo.Split('•').First(), modelCargo.Split('•').Last().Remove(0, 1), date, location, updateDescription.Split('[').First());
+                    string imagePath = PictureScraper.CreateRealtivePath(modelCargo.Split('•').First());
+                    img.Add(PictureScraper.GetImage(imagePath)[i]);
+                    //img.add(PictureimagePath)
+
+                    ScheduleModel launch = new ScheduleModel(modelCargo.Split('•').First(), modelCargo.Split('•').Last().Remove(0, 1), date, location, updateDescription.Split('[').First(), img[i]);
                     Schedule.Add(launch);
                 }
             }

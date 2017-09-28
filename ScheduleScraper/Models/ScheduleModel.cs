@@ -13,14 +13,16 @@ namespace ScheduleScraper.Models
         public string Date { get; set; }
         public string Location { get; set; }
         public string Description { get; set; }
+        public string ImageSource { get; set; }
 
-        public ScheduleModel(string rocketModel, string cargo, string date, string location, string description)
+        public ScheduleModel(string rocketModel, string cargo, string date, string location, string description, string imageSource)
         {
             RocketModel = rocketModel;
             Cargo = cargo;
             Date = date;
             Location = location;
             Description = description;
+            ImageSource = imageSource;
         }
     }
 }
