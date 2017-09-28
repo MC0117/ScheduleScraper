@@ -53,11 +53,10 @@ namespace ScheduleScraper
                 Schedule = new List<ScheduleModel>();
 
                 HtmlNodeCollection nodeList = doc.DocumentNode.SelectNodes("//*[@id='page-64']/div/div");
-                List<string> img = new List<string>();
 
                 for (int i = 0; i < nodeList.Count; i += 3)
                 {
-
+                    List<string> img = new List<string>();
                     HtmlNode launchDateNode = nodeList[i];
                     string date = (launchDateNode.ChildNodes.Where(n => n.Name == "span").First().InnerText);
                     string modelCargo = (launchDateNode.ChildNodes.Where(n => n.Name == "span").Last().InnerText);
@@ -70,12 +69,13 @@ namespace ScheduleScraper
 
                     string imagePath = PictureScraper.CreateRealtivePath(modelCargo.Split('•').First());
                     List<string> images = PictureScraper.GetImage(imagePath);
+                    string imgUrl = null;
                     if (images != null && images.Count > 0)
                     {
                         img.Add(images[0]);
-                        ScheduleModel launch = new ScheduleModel(modelCargo.Split('•').First(), modelCargo.Split('•').Last().Remove(0, 1), date, location, updateDescription.Split('[').First(), img[0]);
-                        Schedule.Add(launch);
                     }
+                    ScheduleModel launch = new ScheduleModel(modelCargo.Split('•').First(), modelCargo.Split('•').Last().Remove(0, 1), date, location, updateDescription.Split('[').First(), imgUrl);
+                    Schedule.Add(launch);
                     //img.add(PictureimagePath)
                 }
             }
