@@ -72,7 +72,9 @@ namespace ScheduleScraper
                     string imgUrl = null;
                     if (images != null && images.Count > 0)
                     {
-                        img.Add(images[0]);
+                        imgUrl = images[0];
+                        if (imgUrl.StartsWith(@"//"))
+                            imgUrl = imgUrl.Substring(2);
                     }
                     ScheduleModel launch = new ScheduleModel(modelCargo.Split('•').First(), modelCargo.Split('•').Last().Remove(0, 1), date, location, updateDescription.Split('[').First(), imgUrl);
                     Schedule.Add(launch);
