@@ -70,12 +70,14 @@ namespace ScheduleScraper
 
                     string imagePath = PictureScraper.CreateRealtivePath(modelCargo.Split('•').First());
                     List<string> images = PictureScraper.GetImage(imagePath);
+                    string imgUrl = null;
                     if (images != null && images.Count > 0)
                     {
                         img.Add(images[0]);
-                        ScheduleModel launch = new ScheduleModel(modelCargo.Split('•').First(), modelCargo.Split('•').Last().Remove(0, 1), date, location, updateDescription.Split('[').First(), img[0]);
-                        Schedule.Add(launch);
+                        imgUrl = images[0];
                     }
+                    ScheduleModel launch = new ScheduleModel(modelCargo.Split('•').First(), modelCargo.Split('•').Last().Remove(0, 1), date, location, updateDescription.Split('[').First(), imgUrl);
+                    Schedule.Add(launch);
                     //img.add(PictureimagePath)
                 }
             }
